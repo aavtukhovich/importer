@@ -50,6 +50,21 @@ services:
       - 6379:6379
     networks:
       - mesh-network
+  rabbitmq:
+    image: rabbitmq:3.8.19-management-alpine
+    container_name: rabbitmq
+    volumes:
+      - ./docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./docker/rabbitmq/logs/:/var/log/rabbitmq/
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - mesh-network
 
   mailhog:
     image: mailhog/mailhog:latest
