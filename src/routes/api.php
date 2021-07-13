@@ -15,6 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResources([
-    'uploads' => UploadController::class,
-]);
+Route::apiResource("uploads", UploadController::class);

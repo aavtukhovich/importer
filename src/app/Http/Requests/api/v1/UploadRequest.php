@@ -24,7 +24,7 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'required|mimes:xls,xlsx|size:2048'
+            'file' => 'required|mimes:xls,xlsx|max:4049'
         ];
     }
 
@@ -38,7 +38,7 @@ class UploadRequest extends FormRequest
         return [
             'file.required' => "The file is required.",
             'file.mimes' => "The uploaded file doesn't match the type.",
-            'file.size' => "The uploaded file doesn't match the max size."
+            'file.size' => "The uploaded :attribute doesn't match the max :size kb."
         ];
     }
 }

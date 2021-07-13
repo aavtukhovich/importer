@@ -16,6 +16,6 @@ class UploadController extends Controller
      */
     public function store(UploadRequest $request)
     {
-        //
+        return response()->json(true);
     }
 }
