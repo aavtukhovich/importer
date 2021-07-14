@@ -46,7 +46,7 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev lib
 
 # Install Redis, Xdebug
 RUN pecl install xdebug redis amqp \
-	&& docker-php-ext-install sockets zip exif \
+	&& docker-php-ext-install sockets zip exif pdo_mysql \
 	&& docker-php-ext-enable xdebug redis 
 
 ADD ./www.conf /usr/local/etc/php-fpm.d/

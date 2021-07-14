@@ -14,7 +14,7 @@ class CreateRowsTable extends Migration
     public function up()
     {
         Schema::create('rows', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger("id");
             $table->string("name", 250);
             $table->date('date');
             $table->timestamps();

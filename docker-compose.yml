@@ -54,15 +54,15 @@ services:
     networks:
       - mesh-network
   rabbitmq:
-    image: rabbitmq:3.8.19-management-alpine
+    image: rabbitmq:3-management
     container_name: rabbitmq
+    hostname: local
     volumes:
-      - ./docker/rabbitmq/etc/:/etc/rabbitmq/
-      - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
-      - ./docker/rabbitmq/logs/:/var/log/rabbitmq/
+      - ./docker/rabbitmq/logs:/var/log/rabbitmq/log
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: /
     ports:
       - 5672:5672
       - 15672:15672

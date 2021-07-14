@@ -9,5 +9,9 @@ class Row extends Model
 {
     use HasFactory;
 
+    protected $table = 'rows';
+
+    protected $fillable = ["id", "name", "date"];
+
     protected $dateFormat = 'd.m.Y';
 }
