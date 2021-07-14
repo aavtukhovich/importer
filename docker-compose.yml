@@ -35,8 +35,7 @@ services:
       - mesh-network
     entrypoint: sh -c "
       echo 'CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};' > /docker-entrypoint-initdb.d/init.sql;
-      /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-      "
+      /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
 
   php:
     build: ./docker/php

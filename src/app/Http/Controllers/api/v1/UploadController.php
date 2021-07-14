@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\UploadRequest;
+use App\Jobs\ImportingFromFileJob;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller
@@ -16,6 +17,7 @@ class UploadController extends Controller
      */
     public function store(UploadRequest $request)
     {
+        ImportingFromFileJob($request->validated()->file)::dispatch();
         return response()->json(true);
     }
 }
