@@ -30,10 +30,10 @@ class UploadController extends Controller
         $validated = $request->validated();
         if (isset($validated['file'])) {
             $file = $validated['file'];
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
+            $fileName = $file->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs("/", $fileName);
             $reportId = hash('crc32', $fileName);
-            Excel::import(new ImportingFromFileJob($reportId), Storage::path("public/$filePath"));
+            Excel::import(new ImportingFromFileJob($reportId), Storage::path($filePath));
 
             return response()->json([
                 'status' => true,

@@ -22,8 +22,6 @@ class ImportingFromFileJob implements ToCollection, WithChunkReading, WithCalcul
     {
         $this->reportId = $reportId;
         Redis::set($this->reportId, 0);
-        // $this->redis = Redis::connection("redis");
-        // $this->redis->set($this->reportId, 0);
     }
 
     public function collection(Collection $collection)
@@ -41,9 +39,6 @@ class ImportingFromFileJob implements ToCollection, WithChunkReading, WithCalcul
     private function processedLines(Int $linesCount)
     {
         Redis::set($this->reportId, $linesCount);
-        Log::info($this->reportId . " -> " . Redis::get($this->reportId));
-        // $this->redis = Redis::connection("redis");
-        // $this->redis->set($this->reportId, $linesCount);
     }
 
     public function startRow(): int
