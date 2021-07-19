@@ -3,18 +3,20 @@
 namespace App\Jobs;
 
 use App\Models\Row;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithStartRow;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Maatwebsite\Excel\Concerns\RemembersRowNumber;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class ImportingFromFileJob implements ToCollection, WithChunkReading, WithCalculatedFormulas, ShouldQueue, WithStartRow
+class ImportingFromFileJob implements ToModel, WithChunkReading, WithHeadingRow, WithBatchInserts, WithCalculatedFormulas, ShouldQueue
 {
+    use RemembersRowNumber;
+
     private $reportId;
     private $redis;
 
@@ -24,26 +26,22 @@ class ImportingFromFileJob implements ToCollection, WithChunkReading, WithCalcul
         Redis::set($this->reportId, 0);
     }
 
-    public function collection(Collection $collection)
+    public function model(array $row)
     {
-        foreach ($collection as $item) {
-            $row = new Row();
-            $row->id = $item[0];
-            $row->name = $item[1];
-            $row->date = Date::excelToDateTimeObject($item[2])->format('Y-m-d');
-            $row->save();
+        $currentRowNumber = $this->getRowNumber();
+        if (!empty($row['id'])) {
+            // Количество обработанных строк
+            Redis::set($this->reportId, $currentRowNumber);
+            return new Row([
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'date' => Date::excelToDateTimeObject($row['date'])->format('Y-m-d'),
+            ]);
         }
-        $this->processedLines($collection->count());
     }
-
-    private function processedLines(Int $linesCount)
+    public function batchSize(): int
     {
-        Redis::set($this->reportId, $linesCount);
-    }
-
-    public function startRow(): int
-    {
-        return 2;
+        return 1000;
     }
 
     public function chunkSize(): int
